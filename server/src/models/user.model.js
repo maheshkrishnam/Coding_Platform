@@ -8,6 +8,7 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
+      unique: true,
       required: true,
       lowercase: true,
       trim: true,
@@ -47,7 +48,7 @@ const userSchema = new Schema(
       trim: true,
     },
     avatar: { type: String }, // from cloudinary
-    passwordHash: {
+    password: {
       type: String,
       required: true,
     },
@@ -55,50 +56,60 @@ const userSchema = new Schema(
     problemSolved: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Problem"
+        ref: "Problem",
       }
     ],
     rating: {
       type: Number,
-      default: 0
+      default: 0,
     },
-    rank: { type: Number },
+    rank: {
+      type: Number,
+      default: 100000,
+    },
     streak: {
       type: Number,
-      default: 0
+      default: 0,
     },
     discussions: [{
       type: Schema.Types.ObjectId,
-      ref: "Discussion"
+      ref: "Discussion",
     }],
     activityLogs: [{
       type: Schema.Types.ObjectId,
-      ref: "ActivityLog"
+      ref: "ActivityLog",
     }],
     algorithmsCreated: [{
       type: Schema.Types.ObjectId,
-      ref: "Algorithm"
+      ref: "Algorithm",
     }],
     refreshToken: { type: String },
   },
   { timestamps: true }
 );
 
+
 // pre must have the access to this so we will be using normal function as arrow function don't have access to this
 // middleware :: encrypt the password just before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10);
+  try {
+    this.password = await bcrypt.hash(this.password, 10);
+  } catch (error) {
+    console.error('Error hashing password:', error);
+  }
   next();
 });
+
 
 // inserting method into userSchema for password checking
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password); //returns true or false
 };
 
+
 // accessToken
-userSchema.methods.generateAccessToken = async function (password) {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -113,8 +124,9 @@ userSchema.methods.generateAccessToken = async function (password) {
   )
 };
 
+
 // refreshToken
-userSchema.methods.generateRefreshToken = async function (password) {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id
@@ -126,4 +138,5 @@ userSchema.methods.generateRefreshToken = async function (password) {
   )
 };
 
-export default model("User", userSchema);
+const User = model("User", userSchema);
+export default User;
