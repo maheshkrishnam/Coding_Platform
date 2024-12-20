@@ -107,7 +107,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({
-    $or: [{ username }, { email }]
+    $and: [{ username }, { email }]
   });
 
   if (!user) {
@@ -218,6 +218,43 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       )
     );
 });
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res
+        .send(404)
+        .json(
+          404,
+          { message: "User not found" }
+        );
+    }
+    res
+      .send(200)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            user
+          }
+        )
+      );
+  } catch (err) {
+    res
+      .send(500)
+      .json(
+        new ApiError(
+          500,
+          {
+            message: "Server error",
+            error: err.message
+          }
+        )
+      );
+  }
+};
+
 
 export {
   registerUser,

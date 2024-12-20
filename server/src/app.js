@@ -7,7 +7,7 @@ const app = express();
 // use :: use is generally used for middlewares
 // for cross origin sharing for all origin belonging to CORS_ORIGIN 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
+  origin: "http://localhost:5173",
   credentials: true
 }));
 

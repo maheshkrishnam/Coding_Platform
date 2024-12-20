@@ -27,6 +27,10 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
+    password: {
+      type: String,
+      required: true,
+    },
     github: {
       type: String,
       trim: true,
@@ -48,11 +52,6 @@ const userSchema = new Schema(
       trim: true,
     },
     avatar: { type: String }, // from cloudinary
-    password: {
-      type: String,
-      required: true,
-    },
-    preferredLanguages: [{ type: String }],
     problemSolved: [
       {
         type: Schema.Types.ObjectId,
