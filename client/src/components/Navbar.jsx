@@ -24,7 +24,7 @@ const Navbar = ({ isLoggedIn, user, onLogin, onLogout }) => {
   };
 
   return (
-    <nav className="bg-slate-900 text-white shadow-sm">
+    <nav className="bg-slate-950 text-white shadow-sm">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center p-4">
         {/* Hamburger Menu for Mobile (Moved to the left) */}
         <button

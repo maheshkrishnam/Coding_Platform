@@ -46,9 +46,9 @@ const Courses = () => {
     },
     {
       title: "Express for Beginners",
-      description: "Get started with Express, one of the most popular back-end framework.",
+      description: "Get started with Express, one of the most popular back-end frameworks.",
       type: "Paid",
-      link: "/courses/react-beginners",
+      link: "/courses/express-beginners",
     },
   ];
 
@@ -56,54 +56,56 @@ const Courses = () => {
   const paidCourses = allCourses.filter(course => course.type === "Paid");
 
   return (
-    <section className="courses py-8 px-4 bg-gray-900 text-white">
-      <h2 className="text-3xl font-semibold mb-8 text-center">Explore Our Courses</h2>
+    <section className="courses py-12 px-4 bg-gray-900 text-white">
+      <div className="max-w-screen-xl mx-auto"> {/* Added max-w-screen-xl and mx-auto to center the content */}
+        <h2 className="text-3xl font-semibold mb-12 text-center">Explore Our Courses</h2>
 
-      <div className="space-y-12">
-        {/* Free Courses */}
-        <div>
-          <h3 className="text-2xl font-semibold mb-4 text-center">Free Courses</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {freeCourses.map((course, index) => (
-              <div
-                key={index}
-                className="course-card bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200"
-              >
-                <h4 className="text-lg font-medium mb-3">{course.title}</h4>
-                <p className="text-sm mb-4">{course.description}</p>
-                <a
-                  href={course.link}
-                  className="inline-block py-2 px-4 bg-green-500 text-white rounded-lg text-sm text-center w-full"
+        <div className="space-y-12">
+          {/* Free Courses */}
+          <div>
+            <h3 className="text-2xl font-semibold mb-6 text-center">Free Courses</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {freeCourses.map((course, index) => (
+                <div
+                  key={index}
+                  className="course-card bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200"
                 >
-                  Explore Course
-                </a>
-              </div>
-            ))}
+                  <h4 className="text-lg font-medium mb-3">{course.title}</h4>
+                  <p className="text-sm mb-4">{course.description}</p>
+                  <a
+                    href={course.link}
+                    className="inline-block py-2 px-4 bg-green-500 text-white rounded-lg text-sm text-center w-full"
+                  >
+                    Explore Course
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Paid Courses */}
+          <div>
+            <h3 className="text-2xl font-semibold mb-6 text-center">Paid Courses</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {paidCourses.map((course, index) => (
+                <div
+                  key={index}
+                  className="course-card bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200"
+                >
+                  <h4 className="text-lg font-medium mb-3">{course.title}</h4>
+                  <p className="text-sm mb-4">{course.description}</p>
+                  <a
+                    href={course.link}
+                    className="inline-block py-2 px-4 bg-blue-500 text-white rounded-lg text-sm text-center w-full"
+                  >
+                    Explore Course
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Paid Courses */}
-        <div>
-          <h3 className="text-2xl font-semibold mb-4 text-center">Paid Courses</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {paidCourses.map((course, index) => (
-              <div
-                key={index}
-                className="course-card bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200"
-              >
-                <h4 className="text-lg font-medium mb-3">{course.title}</h4>
-                <p className="text-sm mb-4">{course.description}</p>
-                <a
-                  href={course.link}
-                  className="inline-block py-2 px-4 bg-blue-500 text-white rounded-lg text-sm text-center w-full"
-                >
-                  Explore Course
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      </div> {/* Closing the max-w-screen-xl div */}
     </section>
   );
 };

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Use Link for routing
+import Loader from "../components/Loader";
 
 // GitHub API URL for fetching repository content
 const GITHUB_REPO_URL = "https://api.github.com/repos/maheshkrishnam/Coding_Platform/contents/problems";
@@ -22,35 +24,19 @@ const ProblemList = () => {
       for (let folder of problemFolders) {
         const folderName = folder.name;
 
-        // Fetch the files inside each problem folder
-        const problemDetails = await fetch(
-          `https://api.github.com/repos/maheshkrishnam/Coding_Platform/contents/problems/${folderName}`
-        );
-        const problemFiles = await problemDetails.json();
-
-        // Get the problem description (problem.md)
-        const descriptionFile = problemFiles.find(file => file.name === "problem.md");
-        const descriptionResponse = await fetch(descriptionFile.download_url);
-        const description = await descriptionResponse.text();
-
-        // Get input.txt and output.txt
-        const inputFile = problemFiles.find(file => file.name === "input.txt");
-        const inputResponse = await fetch(inputFile.download_url);
-        const input = await inputResponse.text();
-
-        const outputFile = problemFiles.find(file => file.name === "output.txt");
-        const outputResponse = await fetch(outputFile.download_url);
-        const output = await outputResponse.text();
-
-        // Store the problem data
+        // Store only the problem title and its slug
         problemData.push({
           title: folderName,
-          description,
-          input,
-          output,
           slug: folderName,
         });
       }
+
+      // Sort problems numerically based on the problem number
+      problemData.sort((a, b) => {
+        const numA = parseInt(a.title.split(".")[0]);
+        const numB = parseInt(b.title.split(".")[0]);
+        return numA - numB;
+      });
 
       setProblems(problemData);
       setLoading(false);
@@ -65,25 +51,27 @@ const ProblemList = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading problems...</div>;
+    return <div><Loader /></div>;
   }
 
   return (
     <section className="problem-list p-6 bg-gray-800 text-white">
-      <h2 className="text-3xl mb-4 font-semibold">Problems</h2>
-      <ul className="space-y-4">
+      <h2 className="text-xl mb-4 font-semibold">Problems</h2>
+      <div className="space-y-4">
         {problems.map((problem, index) => (
-          <li key={index} className="hover:bg-gray-700 p-4 rounded-md">
-            <a
-              href={`/problems/${problem.slug}`}
-              className="text-lg font-medium hover:text-orange-500 transition-colors"
+          <div
+            key={index}
+            className="problem-card px-6 py-2 rounded-lg bg-gray-900 hover:bg-gray-600 transition-all"
+          >
+            <Link
+              to={`/problem/${problem.slug}`}
+              className="block text-base font-normal hover:text-orange-500 transition-colors"
             >
               {problem.title}
-            </a>
-            <p className="mt-2 text-sm text-gray-400">{problem.description.slice(0, 100)}...</p>
-          </li>
+            </Link>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
   );
 };
