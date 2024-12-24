@@ -219,7 +219,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 });
 
-export const getUserProfile = async (req, res) => {
+export const getUserProfile = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
@@ -253,7 +253,7 @@ export const getUserProfile = async (req, res) => {
         )
       );
   }
-};
+});
 
 
 export {

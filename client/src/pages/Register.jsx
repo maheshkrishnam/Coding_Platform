@@ -36,10 +36,10 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-6 rounded-lg shadow-md w-96"
+        className="bg-slate-800 p-6 rounded-lg shadow-md w-96"
       >
         <h2 className="text-2xl font-bold text-white mb-6 text-center">
           Register
@@ -50,7 +50,7 @@ const Register = () => {
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <input
@@ -59,7 +59,7 @@ const Register = () => {
           placeholder="Full Name"
           value={formData.fullname}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <input
@@ -68,7 +68,7 @@ const Register = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <input
@@ -77,7 +77,7 @@ const Register = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <div className="text-right text-sm mb-4">
@@ -97,7 +97,7 @@ const Register = () => {
               placeholder="LinkedIn Profile (Optional)"
               value={formData.linkedIn}
               onChange={handleChange}
-              className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+              className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
             />
             <input
               type="text"
@@ -105,7 +105,7 @@ const Register = () => {
               placeholder="GitHub Profile (Optional)"
               value={formData.github}
               onChange={handleChange}
-              className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+              className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
             />
             <input
               type="text"
@@ -113,7 +113,7 @@ const Register = () => {
               placeholder="College Name (Optional)"
               value={formData.college}
               onChange={handleChange}
-              className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+              className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
             />
             <input
               type="text"
@@ -121,7 +121,7 @@ const Register = () => {
               placeholder="Year of Study (Optional)"
               value={formData.year}
               onChange={handleChange}
-              className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+              className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
             />
             <input
               type="text"
@@ -129,7 +129,7 @@ const Register = () => {
               placeholder="Branch (Optional)"
               value={formData.branch}
               onChange={handleChange}
-              className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+              className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
             />
           </div>
         )}

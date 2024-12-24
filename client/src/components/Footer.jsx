@@ -2,13 +2,13 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-950 text-white py-8">
+    <footer className="bg-slate-950 text-white py-8">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* About Section */}
           <div>
             <h3 className="text-xl font-semibold mb-4">About CPP</h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-slate-400">
               CPP is a coding platform designed to help developers improve their skills by solving problems, learning from courses, and collaborating with peers.
             </p>
           </div>
@@ -42,13 +42,13 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom Section */}
-        <div className="flex justify-between items-center mt-8 border-t border-gray-700 pt-6">
-          <div className="text-sm text-gray-400">
+        <div className="flex justify-between items-center mt-8 border-t border-slate-700 pt-6">
+          <div className="text-sm text-slate-400">
             <p>&copy; 2024 CPP. All rights reserved.</p>
           </div>
           <div className="space-x-6">
-            <a href="/privacy-policy" className="text-sm text-gray-400 hover:text-orange-500 transition-colors duration-300">Privacy Policy</a>
-            <a href="/terms-of-service" className="text-sm text-gray-400 hover:text-orange-500 transition-colors duration-300">Terms of Service</a>
+            <a href="/privacy-policy" className="text-sm text-slate-400 hover:text-orange-500 transition-colors duration-300">Privacy Policy</a>
+            <a href="/terms-of-service" className="text-sm text-slate-400 hover:text-orange-500 transition-colors duration-300">Terms of Service</a>
           </div>
         </div>
       </div>

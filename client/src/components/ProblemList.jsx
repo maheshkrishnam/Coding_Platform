@@ -1,37 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Use Link for routing
+import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
 
-// GitHub API URL for fetching repository content
-const GITHUB_REPO_URL = "https://api.github.com/repos/maheshkrishnam/Coding_Platform/contents/problems";
+const API_BASE_URL = "http://localhost:5000/problem"; // URL to your backend API
 
 const ProblemList = () => {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Function to fetch problems data
   const fetchProblems = async () => {
     try {
-      const response = await fetch(GITHUB_REPO_URL);
+      const response = await fetch(API_BASE_URL);  // Call your backend API instead of GitHub
       const data = await response.json();
 
-      // Filter to get only folders (problems are represented as folders)
-      const problemFolders = data.filter(item => item.type === "dir");
+      const problemData = data.map((problem) => ({
+        title: problem.title,
+        slug: problem.slug,
+      }));
 
-      const problemData = [];
-
-      // Fetch details for each problem folder
-      for (let folder of problemFolders) {
-        const folderName = folder.name;
-
-        // Store only the problem title and its slug
-        problemData.push({
-          title: folderName,
-          slug: folderName,
-        });
-      }
-
-      // Sort problems numerically based on the problem number
       problemData.sort((a, b) => {
         const numA = parseInt(a.title.split(".")[0]);
         const numB = parseInt(b.title.split(".")[0]);
@@ -55,16 +41,16 @@ const ProblemList = () => {
   }
 
   return (
-    <section className="problem-list p-6 bg-gray-800 text-white">
-      <h2 className="text-xl mb-4 font-semibold">Problems</h2>
+    <section className="problem-list p-6 bg-slate-900 text-white rounded-lg">
+      <h2 className="text-2xl mb-4 font-semibold">Problems</h2>
       <div className="space-y-4">
         {problems.map((problem, index) => (
           <div
             key={index}
-            className="problem-card px-6 py-2 rounded-lg bg-gray-900 hover:bg-gray-600 transition-all"
+            className="problem-card px-6 py-4 rounded-lg bg-slate-700 font-medium hover:bg-slate-600 transition-all"
           >
             <Link
-              to={`/problem/${problem.slug}`}
+              to={`/problem/${problem.slug}`} target="_blank"
               className="block text-base font-normal hover:text-orange-500 transition-colors"
             >
               {problem.title}

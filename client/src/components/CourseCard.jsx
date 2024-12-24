@@ -1,16 +1,19 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const CourseCard = ({ title, description, link }) => {
+const CourseCard = ({ title, description, link, bgClass }) => {
   return (
-    <div className="course-card bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-200">
-      <h3 className="text-base font-semibold mb-3">{title}</h3>
-      <p className="text-sm text-gray-400 mb-4">{description}</p>
-      <a
-        href={link}
-        className="inline-block py-2 px-4 bg-gray-700 text-white rounded-lg w-full text-center text-sm hover:bg-gray-600 transition duration-200"
+    <div
+      className={"p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 bg-slate-700"}
+    >
+      <h4 className="text-lg font-medium mb-3">{title}</h4>
+      <p className="text-sm mb-4">{description}</p>
+      <Link
+        to={link}
+        className="inline-block py-2 px-4 bg-slate-500 text-white rounded-lg text-sm text-center w-full"
       >
-        View Course
-      </a>
+        Explore Course
+      </Link>
     </div>
   );
 };

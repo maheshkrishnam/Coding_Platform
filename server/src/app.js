@@ -28,8 +28,12 @@ app.use(cookieParser());
 
 // routes
 import userRouter from "./routes/user.routes.js";
+import algoRouter from "./routes/algorithm.routes.js";
+import problemRoutes from "./routes/problem.routes.js";
 
 // routes declaration
 app.use("/users", userRouter);
+app.use('/algorithms', algoRouter);
+app.use("/problem", problemRoutes);
 
 export default app;

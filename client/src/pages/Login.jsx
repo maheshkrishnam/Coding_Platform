@@ -28,10 +28,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-6 rounded-lg shadow-md w-96"
+        className="bg-slate-800 p-6 rounded-lg shadow-md w-96"
       >
         <h2 className="text-2xl font-bold text-white mb-6 text-center">
           Login
@@ -41,7 +41,7 @@ const Login = () => {
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <input
@@ -50,7 +50,7 @@ const Login = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <input
@@ -59,7 +59,7 @@ const Login = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none"
+          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
         <button

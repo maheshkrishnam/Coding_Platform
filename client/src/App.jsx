@@ -5,10 +5,14 @@ import Footer from "./components/Footer";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProblemPage from "./pages/ProblemPage";
-import Courses from "./pages/Courses";
+import CoursePage from "./pages/CoursePage";
 import About from "./pages/About";
-import Algorithms from "./pages/Algorithms";
+import AlgorithmList from "./pages/AlgorithmList";
 import Contest from "./pages/Contest";
+import AlgorithmPage from "./pages/AlgorithmPage";
+import TryNow from "./components/TryNow";
+import ProblemSolvingPage from "./pages/ProblemSolvingPage";
+import DailyProblemPage from "./pages/DailyProblem";
 
 const Layout = ({ isLoggedIn, handleLogin }) => {
   const location = useLocation(); // useLocation hook is used here
@@ -25,9 +29,13 @@ const Layout = ({ isLoggedIn, handleLogin }) => {
           <Route path="/register" element={<Register />} />
           <Route path="/problems" element={<ProblemPage />} />
           <Route path="/contest" element={<Contest />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/algorithms" element={<Algorithms />} />
+          <Route path="/courses" element={<CoursePage />} />
+          <Route path="/algorithms" element={<AlgorithmList />} />
           <Route path="/about" element={<About />} />
+          <Route path="/algorithms/:category/:algorithm" element={<AlgorithmPage />} />
+          <Route path="/try-now" element={<TryNow />} />
+          <Route path="/problem/:slug" element={<ProblemSolvingPage />} />
+          <Route path="/daily-problem/:date" element={<DailyProblemPage />} />
         </Routes>
       </main>
 

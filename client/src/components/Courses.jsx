@@ -38,14 +38,9 @@ const Courses = () => {
 
   const [visibleCourses, setVisibleCourses] = useState(2);
 
-  // Handle showing more courses
-  const showMoreCourses = () => {
-    setVisibleCourses((prev) => Math.min(prev + 2, allCourses.length)); // Show 2 more courses at a time
-  };
-
   return (
-    <section className="courses max-w-screen-xl mx-auto p-4 bg-gray-900 text-white">
-      <h2 className="text-xl font-semibold mb-8 text-center">Explore Our Courses</h2>
+    <section className="courses max-w-screen-xl mx-auto p-4 bg-slate-900 text-white rounded-lg">
+      <h2 className="text-2xl font-semibold mb-8 text-center">Explore Our Courses</h2>
 
       {/* Grid Layout for Courses */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -59,15 +54,16 @@ const Courses = () => {
         ))}
       </div>
 
-      {/* Button to load more courses */}
+      {/* Link to the courses page */}
       <div className="text-center mt-6">
         {visibleCourses < allCourses.length && (
-          <button
-            onClick={showMoreCourses}
-            className="bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-200 mx-2"
-          >
-            See More Courses
-          </button>
+          <Link to="/courses">
+            <button
+              className="bg-slate-700 text-white px-6 py-2 rounded-lg hover:bg-slate-600 transition duration-200 mx-2"
+            >
+              See More Courses
+            </button>
+          </Link>
         )}
       </div>
     </section>
