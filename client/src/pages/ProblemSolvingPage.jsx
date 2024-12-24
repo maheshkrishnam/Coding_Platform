@@ -21,6 +21,7 @@ const ProblemSolvingPage = () => {
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [executionOutput, setExecutionOutput] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
 
   // Fetch problem details from backend API
   useEffect(() => {
@@ -46,36 +47,55 @@ const ProblemSolvingPage = () => {
 
   const handleRunCode = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/execute", {
+      const response = await axios.post("http://localhost:5000/execute/run", {
         language,
         code,
         input,
       });
-      setExecutionOutput(response.data.output || "No output returned.");
+
+      const actualOutput = response.data.output?.trim() || "No output returned.";
+      setExecutionOutput(actualOutput);
+
+      // Check if the output matches the expected output
+      if (actualOutput === output) {
+        setValidationMessage("Output matches the expected output! ✅");
+      } else {
+        setValidationMessage("Output does not match the expected output. ❌");
+      }
     } catch (err) {
       console.error("Error running code:", err);
       setExecutionOutput("Error occurred while running the code.");
+      setValidationMessage("");
     }
   };
 
   const handleSubmitCode = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/submit", {
+      const response = await axios.post("http://localhost:5000/execute/submit", {
         language,
         code,
         input,
         expectedOutput: output,
       });
-      setExecutionOutput(response.data.result || "No result returned.");
+
+      const result = response.data.result || "No result returned.";
+      setExecutionOutput(result);
+
+      if (result === "Accepted") {
+        setValidationMessage("Code successfully submitted and validated! ✅");
+      } else {
+        setValidationMessage("Code submission failed. ❌");
+      }
     } catch (err) {
       console.error("Error submitting code:", err);
       setExecutionOutput("Error occurred while submitting the code.");
+      setValidationMessage("");
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto bg-slate-700 p-8 rounded-xl shadow-lg">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto bg-slate-700 px-4 py-6 rounded-xl shadow-lg">
         <div className="space-y-6">
           <div>
             <h2 className="text-2xl font-bold mb-4">Problem</h2>
@@ -142,7 +162,7 @@ const ProblemSolvingPage = () => {
               <select
                 value={language}
                 onChange={handleLanguageChange}
-                className="bg-slate-600 text-white p-2 rounded"
+                className="bg-slate-600 text-white p-2 rounded-xl"
               >
                 <option value="cpp">C++</option>
                 <option value="python">Python</option>
@@ -169,6 +189,11 @@ const ProblemSolvingPage = () => {
             <pre className="bg-slate-600 p-4 rounded-md text-sm whitespace-pre-wrap h-60 overflow-auto">
               {executionOutput}
             </pre>
+            {validationMessage && (
+              <div className={`mt-4 text-lg font-semibold ${validationMessage.includes("✅") ? "text-green-500" : "text-red-500"}`}>
+                {validationMessage}
+              </div>
+            )}
           </div>
         </div>
       </div>

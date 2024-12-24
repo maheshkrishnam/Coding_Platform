@@ -145,10 +145,10 @@ const TryNow = () => {
       {/* Code Editor and Input/Output Section */}
       <div className="w-full p-4 lg:p-8 flex flex-col lg:flex-row h-full">
         {/* Input / Output Section (2/3 of the width) */}
-        <div className="flex flex-col w-full lg:w-1/3 h-screen">
+        <div className="flex flex-col w-full lg:w-1/3 h-screen mb-8 md:mb-0">
           <div className="mb-4 flex-1">
             <textarea
-              className="w-full h-3/5 p-2 bg-slate-800 border border-slate-700 rounded text-sm resize-none"
+              className="w-full p-2 h-full bg-slate-800 border border-slate-700 rounded-lg text-sm resize-none"
               placeholder="Enter Input Here"
               value={input}
               onChange={handleInputChange}
@@ -157,7 +157,7 @@ const TryNow = () => {
           </div>
           <div className="flex-1">
             <textarea
-              className="w-full h-3/5 p-2  bg-slate-800 border border-slate-700 rounded text-sm resize-none"
+              className="w-full h-full p-2  bg-slate-800 border border-slate-700 rounded-lg text-sm resize-none"
               placeholder="Output will appear here"
               value={output}
               readOnly
@@ -173,7 +173,7 @@ const TryNow = () => {
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="bg-slate-800 text-white p-2 rounded"
+              className="bg-slate-800 text-white p-2 rounded-lg"
             >
               <option value="cpp">C++</option>
               <option value="python">Python</option>
@@ -199,7 +199,7 @@ const TryNow = () => {
               editorProps={{ $blockScrolling: true }}
               fontSize={16}
               width="100%"  // Adjust width for responsiveness
-              height="80%" // Adjust height for responsiveness
+              height="100%" // Adjust height for responsiveness
             />
           </div>
         </div>

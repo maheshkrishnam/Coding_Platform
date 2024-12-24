@@ -30,10 +30,12 @@ app.use(cookieParser());
 import userRouter from "./routes/user.routes.js";
 import algoRouter from "./routes/algorithm.routes.js";
 import problemRoutes from "./routes/problem.routes.js";
+import executionRoute from "./routes/execution.routes.js";
 
 // routes declaration
 app.use("/users", userRouter);
 app.use('/algorithms', algoRouter);
 app.use("/problem", problemRoutes);
+app.use("/execute", executionRoute);
 
 export default app;

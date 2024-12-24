@@ -123,11 +123,11 @@ const DailyProblemPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto bg-slate-800 p-8 rounded-xl shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-xl mx-auto bg-slate-800 px-4 py-6 rounded-xl shadow-lg">
         <div className="space-y-6">
           <div>
             <h2 className="text-2xl font-bold mb-4">Problem</h2>
-            <div className="bg-slate-700 p-4 rounded-md text-sm">
+            <div className="bg-slate-700 p-4 rounded-xl text-sm">
               <ReactMarkdown
                 children={problem}
                 remarkPlugins={[remarkGfm]}
@@ -141,7 +141,7 @@ const DailyProblemPage = () => {
                       </SyntaxHighlighter>
                     ) : (
                       <code
-                        className="bg-slate-700 text-slate-300 px-1 py-0.5 rounded"
+                        className="bg-slate-700 text-slate-300 px-1 py-0.5 rounded-xl"
                         {...props}
                       >
                         {children}
@@ -156,13 +156,13 @@ const DailyProblemPage = () => {
           <div className="flex gap-4">
             <div className="flex-1">
               <h3 className="font-semibold text-lg mb-2">Input</h3>
-              <pre className="bg-slate-700 p-4 rounded-md text-sm whitespace-pre-wrap h-60 overflow-auto">
+              <pre className="bg-slate-700 p-4 rounded-xl text-sm whitespace-pre-wrap h-60 overflow-auto">
                 {input}
               </pre>
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-lg mb-2">Expected Output</h3>
-              <pre className="bg-slate-700 p-4 rounded-md text-sm whitespace-pre-wrap h-60 overflow-auto">
+              <pre className="bg-slate-700 p-4 rounded-xl text-sm whitespace-pre-wrap h-60 overflow-auto">
                 {output}
               </pre>
             </div>
@@ -174,13 +174,13 @@ const DailyProblemPage = () => {
             <div className="flex justify-start items-center gap-4">
               <button
                 onClick={handleRunCode}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl transition"
               >
                 Run Code
               </button>
               <button
                 onClick={handleSubmitCode}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
               >
                 Submit Code
               </button>
@@ -190,7 +190,7 @@ const DailyProblemPage = () => {
               <select
                 value={language}
                 onChange={handleLanguageChange}
-                className="bg-slate-600 text-white p-2 rounded"
+                className="bg-slate-600 text-white p-2 rounded-xl"
               >
                 <option value="cpp">C++</option>
                 <option value="python">Python</option>
@@ -214,7 +214,7 @@ const DailyProblemPage = () => {
 
           <div>
             <h3 className="font-semibold text-lg mb-2">Execution Output</h3>
-            <pre className="bg-slate-700 p-4 rounded-md text-sm whitespace-pre-wrap h-60 overflow-auto">
+            <pre className="bg-slate-700 p-4 rounded-xl text-sm whitespace-pre-wrap h-60 overflow-auto">
               {executionOutput}
             </pre>
           </div>

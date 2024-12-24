@@ -21,7 +21,7 @@ const CodeRenderer = ({ codeCpp, codePy }) => {
           <button
             onClick={() => setActiveTab("cpp")}
             className={`tab-button py-2 px-6 rounded-lg font-medium text-lg ${
-              activeTab === "cpp" ? "bg-slate-700" : "bg-slate-600"
+              activeTab === "cpp" ? "bg-slate-600" : ""
             }`}
           >
             C++
@@ -31,7 +31,7 @@ const CodeRenderer = ({ codeCpp, codePy }) => {
           <button
             onClick={() => setActiveTab("python")}
             className={`tab-button py-2 px-6 rounded-lg font-medium text-lg ${
-              activeTab === "python" ? "bg-slate-700" : "bg-slate-600"
+              activeTab === "python" ? "bg-slate-600" : ""
             }`}
           >
             Python

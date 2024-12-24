@@ -40,7 +40,7 @@ const AlgorithmDetails = () => {
 
   return (
     <div className="max-w-screen-xl mx-auto px-4">
-      <div className="mx-auto bg-slate-700 p-6 rounded-lg shadow-md">
+      <div className="mx-auto bg-slate-700 px-4 py-6 rounded-lg shadow-md">
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-2">
             {/* Difficulty */}

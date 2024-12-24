@@ -10,11 +10,13 @@ export const getProblemData = async (req, res) => {
     const inputUrl = `${GITHUB_API_BASE}/${encodeURIComponent(slug)}/input.txt`;
     const outputUrl = `${GITHUB_API_BASE}/${encodeURIComponent(slug)}/output.txt`;
 
-    const problemMd = await fetchFromGitHub(problemUrl);
-    const inputTxt = await fetchFromGitHub(inputUrl);
-    const outputTxt = await fetchFromGitHub(outputUrl);
+    const [problemMd, inputTxt, outputTxt] = await Promise.all([
+      fetchFromGitHub(problemUrl),
+      fetchFromGitHub(inputUrl),
+      fetchFromGitHub(outputUrl),
+    ]);
 
-    res.json({
+    res.status(200).json({
       problem: Buffer.from(problemMd.content, "base64").toString("utf8"),
       input: Buffer.from(inputTxt.content, "base64").toString("utf8").trim(),
       output: Buffer.from(outputTxt.content, "base64").toString("utf8").trim(),
@@ -29,9 +31,9 @@ export const getProblems = async (req, res) => {
   try {
     const response = await fetchFromGitHub(GITHUB_API_BASE);
 
-    const problemFolders = response.filter(item => item.type === "dir");
+    const problemFolders = response.filter((item) => item.type === "dir");
 
-    const problemData = problemFolders.map(folder => ({
+    const problemData = problemFolders.map((folder) => ({
       title: folder.name,
       slug: folder.name,
     }));
@@ -42,7 +44,7 @@ export const getProblems = async (req, res) => {
       return numA - numB;
     });
 
-    res.json(problemData);
+    res.status(200).json(problemData);
   } catch (error) {
     console.error("Error fetching problems:", error.message);
     res.status(500).json({ error: "Failed to fetch problems." });

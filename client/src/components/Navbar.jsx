@@ -174,7 +174,7 @@ const Navbar = ({ isLoggedIn, user, onLogin, onLogout }) => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`lg:hidden ${isMenuOpen ? "block" : "hidden"} bg-slate-800 p-4`}>
+      <div className={`lg:hidden ${isMenuOpen ? "block" : "hidden"} bg-slate-1000 p-4`}>
         <div className="text-2xl font-semibold text-white text-center mb-4">
           {/* CPPlatform Logo Inside Hamburger Menu */}
           <NavLink to="/problems">CPPlatform</NavLink>
