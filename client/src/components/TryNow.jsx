@@ -31,7 +31,7 @@ const TryNow = () => {
 
   const handleCategoryClick = async (category) => {
     setSelectedCategory(category);
-    setAlgorithms([]);
+    setAlgorithms([]); // Reset the algorithms when a category is selected
     setSelectedAlgorithm(null);
     setCode('');
     try {
@@ -88,11 +88,14 @@ const TryNow = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/execute', {
+      // Send code, language, and input to the backend
+      const response = await axios.post('http://localhost:5000/execute/run', {
         language,
         code,
         input,
       });
+
+      // Display output from the backend response
       setOutput(response.data.output || 'No output returned.');
     } catch (err) {
       console.error('Error executing code:', err);
@@ -144,7 +147,7 @@ const TryNow = () => {
 
       {/* Code Editor and Input/Output Section */}
       <div className="w-full p-4 lg:p-8 flex flex-col lg:flex-row h-full">
-        {/* Input / Output Section (2/3 of the width) */}
+        {/* Input / Output Section */}
         <div className="flex flex-col w-full lg:w-1/3 h-screen mb-8 md:mb-0">
           <div className="mb-4 flex-1">
             <textarea
@@ -157,7 +160,7 @@ const TryNow = () => {
           </div>
           <div className="flex-1">
             <textarea
-              className="w-full h-full p-2  bg-slate-800 border border-slate-700 rounded-lg text-sm resize-none"
+              className="w-full h-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-sm resize-none"
               placeholder="Output will appear here"
               value={output}
               readOnly
@@ -166,7 +169,7 @@ const TryNow = () => {
           </div>
         </div>
 
-        {/* Code Editor Section (1/3 of the width) */}
+        {/* Code Editor Section */}
         <div className="flex flex-col w-full h-screen lg:w-2/3 mb-4 lg:mb-0 lg:ml-4">
           <div className="mb-4 flex items-center gap-2">
             <label className="font-semibold">Language:</label>
@@ -188,7 +191,7 @@ const TryNow = () => {
             </button>
           </div>
 
-          {/* Editor container with flex-1 to take full height */}
+          {/* Code Editor Container */}
           <div className="h-full">
             <AceEditor
               mode={language === 'cpp' ? 'c_cpp' : 'python'}

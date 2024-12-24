@@ -59,7 +59,6 @@ const getProblemIndex = (date, problemCount) => {
 };
 
 const DailyProblemPage = () => {
-  let slug = "";
   const { date } = useParams();
   const [problem, setProblem] = useState("");
   const [input, setInput] = useState("");
@@ -67,13 +66,13 @@ const DailyProblemPage = () => {
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [executionOutput, setExecutionOutput] = useState("");
+  
+  const slug = problems[getProblemIndex(date, problems.length)];
 
   // Fetch problem details from backend API
   useEffect(() => {
     const fetchProblemDetails = async () => {
       try {
-        const [day, month, year] = date.split('-');
-        slug = problems[day % 10];
         const response = await axios.get(`${BACKEND_API_BASE}/${encodeURIComponent(slug)}`);
         const { problem, input, output } = response.data;
 
@@ -94,7 +93,7 @@ const DailyProblemPage = () => {
 
   const handleRunCode = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/execute", {
+      const response = await axios.post("http://localhost:5000/execute/run", {
         language,
         code,
         input,
@@ -108,7 +107,7 @@ const DailyProblemPage = () => {
 
   const handleSubmitCode = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/submit", {
+      const response = await axios.post("http://localhost:5000/execute/submit", {
         language,
         code,
         input,
@@ -123,11 +122,11 @@ const DailyProblemPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-xl mx-auto bg-slate-800 px-4 py-6 rounded-xl shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-xl mx-auto bg-slate-800 px-4 py-6 rounded-lg shadow-lg">
         <div className="space-y-6">
           <div>
             <h2 className="text-2xl font-bold mb-4">Problem</h2>
-            <div className="bg-slate-700 p-4 rounded-xl text-sm">
+            <div className="bg-slate-700 p-4 rounded-lg text-sm">
               <ReactMarkdown
                 children={problem}
                 remarkPlugins={[remarkGfm]}
@@ -141,7 +140,7 @@ const DailyProblemPage = () => {
                       </SyntaxHighlighter>
                     ) : (
                       <code
-                        className="bg-slate-700 text-slate-300 px-1 py-0.5 rounded-xl"
+                        className="bg-slate-700 text-slate-300 px-1 py-0.5 rounded-lg"
                         {...props}
                       >
                         {children}
@@ -156,13 +155,13 @@ const DailyProblemPage = () => {
           <div className="flex gap-4">
             <div className="flex-1">
               <h3 className="font-semibold text-lg mb-2">Input</h3>
-              <pre className="bg-slate-700 p-4 rounded-xl text-sm whitespace-pre-wrap h-60 overflow-auto">
+              <pre className="bg-slate-700 p-4 rounded-lg text-sm whitespace-pre-wrap h-60 overflow-auto">
                 {input}
               </pre>
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-lg mb-2">Expected Output</h3>
-              <pre className="bg-slate-700 p-4 rounded-xl text-sm whitespace-pre-wrap h-60 overflow-auto">
+              <pre className="bg-slate-700 p-4 rounded-lg text-sm whitespace-pre-wrap h-60 overflow-auto">
                 {output}
               </pre>
             </div>
@@ -174,13 +173,13 @@ const DailyProblemPage = () => {
             <div className="flex justify-start items-center gap-4">
               <button
                 onClick={handleRunCode}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl transition"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
               >
                 Run Code
               </button>
               <button
                 onClick={handleSubmitCode}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
               >
                 Submit Code
               </button>
@@ -190,7 +189,7 @@ const DailyProblemPage = () => {
               <select
                 value={language}
                 onChange={handleLanguageChange}
-                className="bg-slate-600 text-white p-2 rounded-xl"
+                className="bg-slate-600 text-white p-2 rounded-lg"
               >
                 <option value="cpp">C++</option>
                 <option value="python">Python</option>
@@ -214,7 +213,7 @@ const DailyProblemPage = () => {
 
           <div>
             <h3 className="font-semibold text-lg mb-2">Execution Output</h3>
-            <pre className="bg-slate-700 p-4 rounded-xl text-sm whitespace-pre-wrap h-60 overflow-auto">
+            <pre className="bg-slate-700 p-4 rounded-lg text-sm whitespace-pre-wrap h-60 overflow-auto">
               {executionOutput}
             </pre>
           </div>

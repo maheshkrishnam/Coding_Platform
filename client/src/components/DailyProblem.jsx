@@ -27,6 +27,7 @@ const DailyProblem = () => {
               <Link
                 key={d}
                 to={isFuture ? '#' : `/daily-problem/${formatDate(d, month, year)}`}
+                target='_blank'
                 className={`w-8 h-8 flex items-center justify-center rounded-full transition duration-200 ${
                   d === day
                     ? 'bg-orange-500 text-white'

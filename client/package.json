@@ -10,16 +10,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@monaco-editor/react": "^4.6.0",
     "@tailwindcss/typography": "^0.5.15",
     "ace-builds": "^1.37.1",
     "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-ace": "^13.0.0",
+    "react-confetti": "^6.1.0",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.4.0",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^7.0.2",
+    "react-spinners": "^0.15.0",
     "react-syntax-highlighter": "^15.6.1",
+    "react-use": "^17.6.0",
     "remark-gfm": "^4.0.0"
   },
   "devDependencies": {

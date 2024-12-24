@@ -17,7 +17,13 @@ import DailyProblemPage from "./pages/DailyProblem";
 const Layout = ({ isLoggedIn, handleLogin }) => {
   const location = useLocation(); // useLocation hook is used here
 
-  const shouldRenderLayout = location.pathname !== '/' && location.pathname !== '/register';
+  const shouldRenderLayout = !(
+    location.pathname === '/' ||
+    location.pathname === '/register' ||
+    location.pathname.startsWith('/problem/') ||
+    location.pathname.startsWith('/daily-problem/') ||
+    location.pathname.startsWith('/try-now')
+  );
 
   return (
     <>
