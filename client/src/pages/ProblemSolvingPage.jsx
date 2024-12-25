@@ -154,11 +154,11 @@ const ProblemSolvingPage = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen bg-gray-900 text-white flex flex-col ${isFullScreen ? 'overflow-hidden' : ''}`}>
+    <div className={`min-h-screen bg-slate-900 text-white flex flex-col ${isFullScreen ? 'overflow-hidden' : ''}`}>
       {celebrate && <Confetti width={window.innerWidth} height={400} />}
       
       {/* Status Bar */}
-      <header className="bg-gray-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-50">
+      <header className="bg-slate-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-50">
         <div className="flex items-center gap-3">
           {renderStatusIcon()}
           <span className="text-xl font-semibold">{status.message}</span>
@@ -167,7 +167,7 @@ const ProblemSolvingPage = () => {
           <select
             value={language}
             onChange={handleLanguageChange}
-            className="bg-gray-700 text-white p-2 rounded-md"
+            className="bg-slate-700 text-white p-2 rounded-md"
           >
             <option value="cpp">C++</option>
             <option value="python">Python</option>
@@ -203,14 +203,14 @@ const ProblemSolvingPage = () => {
       {/* Main Content */}
       <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         {/* Left Panel: Problem */}
-        <div className="bg-gray-800 p-6 rounded-md shadow-md overflow-auto h-full">
+        <div className="bg-slate-800 p-6 rounded-md shadow-md overflow-auto h-full">
           <Tab.Group>
             <Tab.List className="flex space-x-4 border-b pb-2">
               <Tab
                 className={({ selected }) =>
                   selected
                     ? "text-blue-400 border-b-2 border-blue-400 pb-1 font-semibold"
-                    : "text-gray-400 pb-1"
+                    : "text-slate-400 pb-1"
                 }
               >
                 Problem
@@ -219,7 +219,7 @@ const ProblemSolvingPage = () => {
                 className={({ selected }) =>
                   selected
                     ? "text-blue-400 border-b-2 border-blue-400 pb-1 font-semibold"
-                    : "text-gray-400 pb-1"
+                    : "text-slate-400 pb-1"
                 }
               >
                 Tutorial
@@ -244,7 +244,7 @@ const ProblemSolvingPage = () => {
         </div>
 
         {/* Right Panel: Editor */}
-        <div className={`bg-gray-800 p-6 rounded-md shadow-md relative h-96 md:h-full col-span-2}`}>
+        <div className={`bg-slate-800 p-6 rounded-md shadow-md relative h-96 md:h-full col-span-2}`}>
           <AceEditor
             mode={language === "cpp" ? "c_cpp" : "python"}
             theme="monokai"

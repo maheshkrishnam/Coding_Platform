@@ -1,0 +1,12 @@
+2
+hello
+abcde
+3
+aeiou
+helloworld
+codeforces
+4
+aeiA
+BCDE
+xyzxyz
+HELLOworld

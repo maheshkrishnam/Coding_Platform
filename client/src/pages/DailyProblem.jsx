@@ -4,8 +4,10 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { nord } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { FiCheckCircle, FiXCircle, FiLoader, FiMaximize2, FiMinimize2, FiClock } from "react-icons/fi";
+import Confetti from "react-confetti";
+import { BounceLoader } from "react-spinners";
+import { Tab } from "@headlessui/react";
 
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
@@ -66,10 +68,15 @@ const DailyProblemPage = () => {
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [executionOutput, setExecutionOutput] = useState("");
-  
+  const [status, setStatus] = useState({ message: "Idle", type: "idle" });
+  const [celebrate, setCelebrate] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
   const slug = problems[getProblemIndex(date, problems.length)];
 
-  // Fetch problem details from backend API
   useEffect(() => {
     const fetchProblemDetails = async () => {
       try {
@@ -87,25 +94,49 @@ const DailyProblemPage = () => {
     fetchProblemDetails();
   }, [slug]);
 
+  useEffect(() => {
+    let interval;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setTimer((prevTime) => prevTime + 1);
+      }, 1000);
+    } else if (!isTimerRunning && timer !== 0) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isTimerRunning, timer]);
+
   const handleCodeChange = (newCode) => setCode(newCode);
 
   const handleLanguageChange = (event) => setLanguage(event.target.value);
 
   const handleRunCode = async () => {
+    setIsProcessing(true);
+    setStatus({ message: "Running...", type: "loading" });
     try {
       const response = await axios.post("http://localhost:5000/execute/run", {
         language,
         code,
         input,
       });
-      setExecutionOutput(response.data.output || "No output returned.");
+
+      const result = response.data.output?.trim() || "No output returned.";
+      if (result === "Expected Output") {
+        setStatus({ message: "Success", type: "success" });
+      } else {
+        setStatus({ message: "Incorrect", type: "error" });
+      }
     } catch (err) {
-      console.error("Error running code:", err);
-      setExecutionOutput("Error occurred while running the code.");
+      setStatus({ message: "Error", type: "error" });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const handleSubmitCode = async () => {
+    setIsProcessing(true);
+    setStatus({ message: "Submitting...", type: "loading" });
     try {
       const response = await axios.post("http://localhost:5000/execute/submit", {
         language,
@@ -113,110 +144,168 @@ const DailyProblemPage = () => {
         input,
         expectedOutput: output,
       });
-      setExecutionOutput(response.data.result || "No result returned.");
+
+      const result = response.data.result || "No result returned.";
+      if (result === "Accepted") {
+        setCelebrate(true);
+        setStatus({ message: "Accepted", type: "success" });
+        setTimeout(() => setCelebrate(false), 3000); // Stop celebration after 3 seconds
+      } else {
+        setStatus({ message: "Incorrect", type: "error" });
+      }
     } catch (err) {
-      console.error("Error submitting code:", err);
-      setExecutionOutput("Error occurred while submitting the code.");
+      setStatus({ message: "Error", type: "error" });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-xl mx-auto bg-slate-800 px-4 py-6 rounded-lg shadow-lg">
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Problem</h2>
-            <div className="bg-slate-700 p-4 rounded-lg text-sm">
-              <ReactMarkdown
-                children={problem}
-                remarkPlugins={[remarkGfm]}
-                className="prose prose-invert max-w-none"
-                components={{
-                  code: ({ inline, className, children, ...props }) => {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter style={nord} language={match[1]} {...props}>
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code
-                        className="bg-slate-700 text-slate-300 px-1 py-0.5 rounded-lg"
-                        {...props}
-                      >
-                        {children}
-                      </code>
-                    );
-                  },
-                }}
-              />
-            </div>
-          </div>
+  const renderStatusIcon = () => {
+    switch (status.type) {
+      case "success":
+        return <FiCheckCircle className="text-green-500 text-2xl" />;
+      case "error":
+        return <FiXCircle className="text-red-500 text-2xl" />;
+      case "loading":
+        return <FiLoader className="text-yellow-500 text-2xl animate-spin" />;
+      default:
+        return null;
+    }
+  };
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg mb-2">Input</h3>
-              <pre className="bg-slate-700 p-4 rounded-lg text-sm whitespace-pre-wrap h-60 overflow-auto">
-                {input}
-              </pre>
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg mb-2">Expected Output</h3>
-              <pre className="bg-slate-700 p-4 rounded-lg text-sm whitespace-pre-wrap h-60 overflow-auto">
-                {output}
-              </pre>
-            </div>
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error("Error attempting to enable full-screen mode:", err);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  const toggleTimer = (e) => {
+    if (e.detail === 1) {
+      setIsTimerRunning((prev) => !prev);
+    } else if (e.detail === 2) {
+      resetTimer();
+    }
+  };
+
+  const resetTimer = () => {
+    setTimer(0);
+    setIsTimerRunning(false);
+  };
+
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
+
+  return (
+    <div className={`min-h-screen bg-slate-900 text-white flex flex-col ${isFullScreen ? 'overflow-hidden' : ''}`}>
+      {celebrate && <Confetti width={window.innerWidth} height={400} />}
+      
+      {/* Status Bar */}
+      <header className="bg-slate-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-50">
+        <div className="flex items-center gap-3">
+          {renderStatusIcon()}
+          <span className="text-xl font-semibold">{status.message}</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <select
+            value={language}
+            onChange={handleLanguageChange}
+            className="bg-slate-600 text-white p-2 rounded-md"
+          >
+            <option value="cpp">C++</option>
+            <option value="python">Python</option>
+          </select>
+          <button
+            onClick={handleRunCode}
+            className="bg-green-600 px-4 py-2 rounded-lg hover:bg-green-700 transition"
+          >
+            Run Code
+          </button>
+          <button
+            onClick={handleSubmitCode}
+            className="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Submit Code
+          </button>
+          <div
+            className="cursor-pointer text-xl p-2 flex flex-row"
+            onClick={toggleTimer}
+            onDoubleClick={resetTimer}
+          >
+            <FiClock className={`${isTimerRunning ? 'text-red-600' : 'text-white'}`} />
+            <span className="ml-2">{timer}s</span>
           </div>
+          <button onClick={toggleFullScreen} className="text-white">
+            {isFullScreen ? <FiMinimize2 /> : <FiMaximize2 />}
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+        {/* Left Panel: Problem */}
+        <div className="bg-slate-800 p-6 rounded-md shadow-md overflow-auto">
+          <Tab.Group>
+            <Tab.List className="flex space-x-4 border-b pb-2">
+              <Tab
+                className={({ selected }) =>
+                  selected
+                    ? "text-blue-400 border-b-2 border-blue-400 pb-1 font-semibold"
+                    : "text-slate-400 pb-1"
+                }
+              >
+                Problem
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  selected
+                    ? "text-blue-400 border-b-2 border-blue-400 pb-1 font-semibold"
+                    : "text-slate-400 pb-1"
+                }
+              >
+                Tutorial
+              </Tab>
+            </Tab.List>
+            <Tab.Panels>
+              <Tab.Panel className="h-full overflow-auto">
+                <ReactMarkdown
+                  children={problem}
+                  remarkPlugins={[remarkGfm]}
+                  className="prose prose-invert max-w-none mt-4"
+                />
+              </Tab.Panel>
+              <Tab.Panel className="h-full overflow-auto">
+                <h3 className="text-xl font-semibold text-blue-400 mt-4">Tutorial</h3>
+                <p className="mt-4">
+                  This is a tutorial on how to use the platform. Write your code in the editor and use the timer to track your progress.
+                </p>
+              </Tab.Panel>
+            </Tab.Panels>
+          </Tab.Group>
         </div>
 
-        <div className="space-y-6">
-          <div className="flex flex-col gap-4 mb-4">
-            <div className="flex justify-start items-center gap-4">
-              <button
-                onClick={handleRunCode}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
-              >
-                Run Code
-              </button>
-              <button
-                onClick={handleSubmitCode}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
-              >
-                Submit Code
-              </button>
-            </div>
-            <div className="flex justify-start items-center gap-4">
-              <label className="font-semibold">Language:</label>
-              <select
-                value={language}
-                onChange={handleLanguageChange}
-                className="bg-slate-600 text-white p-2 rounded-lg"
-              >
-                <option value="cpp">C++</option>
-                <option value="python">Python</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <AceEditor
-              mode={language === "cpp" ? "c_cpp" : "python"}
-              theme="monokai"
-              value={code}
-              onChange={handleCodeChange}
-              name="code-editor"
-              editorProps={{ $blockScrolling: true }}
-              fontSize={16}
-              width="100%"
-              height="400px"
-            />
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Execution Output</h3>
-            <pre className="bg-slate-700 p-4 rounded-lg text-sm whitespace-pre-wrap h-60 overflow-auto">
-              {executionOutput}
-            </pre>
-          </div>
+        {/* Right Panel: Code Editor */}
+        <div className="bg-slate-800 p-6 rounded-md shadow-md h-full">
+          <AceEditor
+            mode={language === "cpp" ? "c_cpp" : "python"}
+            theme="monokai"
+            value={code}
+            onChange={handleCodeChange}
+            name="code-editor"
+            fontSize={16}
+            height="100%"
+            width="100%"
+          />
         </div>
       </div>
     </div>

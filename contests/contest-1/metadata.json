@@ -1,0 +1,8 @@
+{
+  "id": "beginner-contest-2023-12-01",
+  "name": "Beginner Contest",
+  "description": "A beginner-level contest to help users learn the basics.",
+  "start_time": "2023-12-01T10:00:00Z",
+  "end_time": "2023-12-01T11:30:00Z",
+  "problems": ["problem_1", "problem_2", "problem_3", "problem_4"]
+}

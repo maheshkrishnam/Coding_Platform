@@ -31,11 +31,13 @@ import userRouter from "./routes/user.routes.js";
 import algoRouter from "./routes/algorithm.routes.js";
 import problemRoutes from "./routes/problem.routes.js";
 import executionRoute from "./routes/execution.routes.js";
+import contestRoutes from "./routes/contest.routes.js";
 
 // routes declaration
 app.use("/users", userRouter);
 app.use('/algorithms', algoRouter);
 app.use("/problem", problemRoutes);
 app.use("/execute", executionRoute);
+app.use('/contests', contestRoutes);
 
 export default app;

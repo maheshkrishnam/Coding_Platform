@@ -1,0 +1,15 @@
+3
+the quick brown fox
+hello world
+the codeforces contest
+4
+a b c d e
+apple orange banana
+space at the end    
+leading space
+5
+hello there     how are  you
+code is love
+beautiful day for coding
+yes no maybe
+one more problem to solve

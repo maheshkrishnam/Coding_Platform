@@ -1,0 +1,6 @@
+{
+  "title": "Longest Substring Without Repeating Characters",
+  "difficulty": "Medium",
+  "points": 150,
+  "tags": ["String", "Sliding Window", "Hashing"]
+}

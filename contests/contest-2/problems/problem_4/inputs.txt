@@ -1,0 +1,15 @@
+3
+hello
+world
+contest
+5
+racecar
+madam
+level
+python
+java
+4
+apple
+banana
+grape
+orange

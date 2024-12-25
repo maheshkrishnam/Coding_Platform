@@ -1,10 +1,11 @@
-["flower", "flow", "flight"]
-["dog", "racecar", "car"]
-["apple", "application", "applause"]
-["interstellar", "internet", "intersection"]
-["computer", "computing", "comprehension"]
-["sun", "sundown", "sunshine"]
-["prefix", "preach", "present"]
-["hello", "hero", "helicopter"]
-["car", "cat", "cab"]
-["bat", "ball", "batman"]
+10
+flower flow flight
+dog racecar car
+apple application applause
+interstellar internet intersection
+computer computing comprehension
+sun sundown sunshine
+prefix preach present
+hello hero helicopter
+car cat cab
+bat ball batman

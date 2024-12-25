@@ -8,11 +8,12 @@ import ProblemPage from "./pages/ProblemPage";
 import CoursePage from "./pages/CoursePage";
 import About from "./pages/About";
 import AlgorithmList from "./pages/AlgorithmList";
-import Contest from "./pages/Contest";
 import AlgorithmPage from "./pages/AlgorithmPage";
 import TryNow from "./components/TryNow";
 import ProblemSolvingPage from "./pages/ProblemSolvingPage";
 import DailyProblemPage from "./pages/DailyProblem";
+import ContestPage from "./pages/ContestPage";
+import Contest from "./pages/Contest";
 
 const Layout = ({ isLoggedIn, handleLogin }) => {
   const location = useLocation(); // useLocation hook is used here
@@ -35,6 +36,7 @@ const Layout = ({ isLoggedIn, handleLogin }) => {
           <Route path="/register" element={<Register />} />
           <Route path="/problems" element={<ProblemPage />} />
           <Route path="/contest" element={<Contest />} />
+          <Route path="/contest/:contestId" element={<ContestPage />} />
           <Route path="/courses" element={<CoursePage />} />
           <Route path="/algorithms" element={<AlgorithmList />} />
           <Route path="/about" element={<About />} />
