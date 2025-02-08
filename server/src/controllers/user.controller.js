@@ -77,8 +77,6 @@ const registerUser = asyncHandler(async (req, res) => {
     preferredLanguages,
   });
 
-  console.log(user);
-
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
 
   if (!createdUser) {
@@ -107,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({
-    $and: [{ username }, { email }]
+    $or: [{ username }, { email }]
   });
 
   if (!user) {
@@ -219,7 +217,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 });
 
-export const getUserProfile = asyncHandler(async (req, res) => {
+const getUserProfile = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
@@ -255,10 +253,65 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+const updateUserProfile = async (req, res) => {
+  try {
+    const { fullname, username, email, college, year, rank, github, linkedIn, password } = req.body;
+    const userId = req.user.id; // Get the user ID from the authenticated token
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user fields if provided
+    if (fullname) user.fullname = fullname;
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (college) user.college = college;
+    if (year) user.year = year;
+    if (rank) user.rank = rank;
+    if (github) user.github = github;
+    if (linkedIn) user.linkedIn = linkedIn;
+
+    // If password is provided, hash it before saving
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    // Save the updated user
+    await user.save();
+    return res.status(200).json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+// Function to get a custom user's profile by username
+const getUserProfileByUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export {
   registerUser,
   loginUser,
   logoutUser,
-  refreshAccessToken
+  refreshAccessToken,
+  updateUserProfile,
+  getUserProfile,
+  getUserProfileByUsername
 };

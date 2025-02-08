@@ -1,30 +1,6 @@
 import { fetchFromGitHub } from "../utils/github.js";
 import { fetchProblemData } from "./problem.service.js";
 
-export const fetchContestProblems = async (contestId) => {
-  const baseUrl = `https://api.github.com/repos/maheshkrishnam/Coding_Platform/contents/contests/${encodeURIComponent(
-    contestId
-  )}/problems`;
-
-  try {
-    // Fetch all problem directories in the contest
-    const problemList = await fetchFromGitHub(baseUrl);
-
-    if (!Array.isArray(problemList)) {
-      throw new Error("Invalid contest structure in GitHub repository");
-    }
-
-    // Fetch details for each problem
-    const problems = await Promise.all(
-      problemList.map((problem) => fetchProblemData(problem.name))
-    );
-
-    return problems;
-  } catch (error) {
-    throw new Error("Failed to fetch contest problems");
-  }
-};
-
 const GITHUB_CONTESTS_URL = "https://api.github.com/repos/maheshkrishnam/Coding_Platform/contents/contests/contests.json";
 
 // Fetch all contests with metadata
@@ -35,23 +11,23 @@ export const fetchAllContests = async () => {
 
     const now = new Date();
 
-    // Classify contests into past, ongoing, and upcoming
-    const classifiedContests = contests.map((contest) => {
+    const ongoing = [];
+    const past = [];
+
+    contests.forEach((contest) => {
       const startTime = new Date(contest.start_time);
       const endTime = new Date(contest.end_time);
 
-      if (now < startTime) {
-        contest.status = "upcoming";
-      } else if (now >= startTime && now <= endTime) {
-        contest.status = "ongoing";
-      } else {
-        contest.status = "completed";
+      if (now >= startTime && now <= endTime) {
+        ongoing.push(contest);
+      } else if (now > endTime) {
+        past.push(contest);
       }
-      return contest;
     });
 
-    return classifiedContests;
+    return { ongoing, past }; // ✅ Correct return structure
   } catch (error) {
+    console.error("Failed to fetch contests from GitHub:", error.message);
     throw new Error("Failed to fetch contests from GitHub");
   }
 };
@@ -63,7 +39,8 @@ export const fetchContestById = async (contestId) => {
   try {
     const contestsData = await fetchFromGitHub(GITHUB_CONTESTS_URL);
     const contests = JSON.parse(Buffer.from(contestsData.content, "base64").toString("utf8"));
-    const contest = contests.find((c) => c.id === contestId);
+
+    const contest = contests.find((c) => String(c.id) === String(contestId));
 
     if (!contest) {
       throw new Error("Contest not found");
@@ -78,6 +55,7 @@ export const fetchContestById = async (contestId) => {
 
     return { ...contest, problems };
   } catch (error) {
+    console.error("Failed to fetch contest details:", error.message);
     throw new Error("Failed to fetch contest details");
   }
 };

@@ -23,7 +23,7 @@ export const executeCode = async (req, res) => {
       status: response.status?.description || "Unknown status",
     });
   } catch (error) {
-    console.error("Error executing code:", error.message);
+    console.error("Error executing code:", error);
     res.status(500).json({ error: "Failed to execute code." });
   }
 };
@@ -39,6 +39,8 @@ export const submitCode = async (req, res) => {
       expectedOutput,
     });
 
+    console.log(response);
+
     const isCorrect = response.stdout?.trim() === expectedOutput.trim();
 
     res.status(200).json({
@@ -48,7 +50,7 @@ export const submitCode = async (req, res) => {
       status: response.status?.description || "Unknown status",
     });
   } catch (error) {
-    console.error("Error submitting code:", error.message);
+    console.error("Error submitting code:", error);
     res.status(500).json({ error: "Failed to submit code." });
   }
 };

@@ -14,10 +14,14 @@ import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 
 const BACKEND_API_BASE = "http://localhost:5000/problem";
+const EXECUTE_API = "http://localhost:5000/execute/run";
+const SUBMIT_API = "http://localhost:5000/execute/submit";
 
 const ProblemSolvingPage = () => {
   const { slug } = useParams();
   const [problem, setProblem] = useState("");
+  const [input, setInput] = useState("");  // Fetched sample input
+  const [expectedOutput, setExpectedOutput] = useState("");  // Fetched expected output
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [status, setStatus] = useState({ message: "Idle", type: "idle" });
@@ -26,13 +30,16 @@ const ProblemSolvingPage = () => {
   const [timer, setTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [output, setOutput] = useState("");  // Store code execution output
 
   useEffect(() => {
     const fetchProblemDetails = async () => {
       try {
         const response = await axios.get(`${BACKEND_API_BASE}/${encodeURIComponent(slug)}`);
-        const { problem } = response.data;
+        const { problem, input, output } = response.data;
         setProblem(problem);
+        setInput(input);
+        setExpectedOutput(output);
       } catch (error) {
         console.error("Error fetching problem details:", error);
       }
@@ -61,17 +68,21 @@ const ProblemSolvingPage = () => {
   const handleRunCode = async () => {
     setIsProcessing(true);
     setStatus({ message: "Running...", type: "loading" });
+
     try {
-      const response = await axios.post("http://localhost:5000/execute/run", {
+      const response = await axios.post(EXECUTE_API, {
         language,
         code,
+        input,
       });
 
       const result = response.data.output?.trim() || "No output returned.";
-      if (result === "Expected Output") {
-        setStatus({ message: "Success", type: "success" });
+      setOutput(result);
+
+      if (result === expectedOutput.trim()) {
+        setStatus({ message: "Correct Output", type: "success" });
       } else {
-        setStatus({ message: "Incorrect", type: "error" });
+        setStatus({ message: "Incorrect Output", type: "error" });
       }
     } catch (err) {
       setStatus({ message: "Error", type: "error" });
@@ -83,19 +94,22 @@ const ProblemSolvingPage = () => {
   const handleSubmitCode = async () => {
     setIsProcessing(true);
     setStatus({ message: "Submitting...", type: "loading" });
+
     try {
-      const response = await axios.post("http://localhost:5000/execute/submit", {
+      const response = await axios.post(SUBMIT_API, {
         language,
         code,
+        input,
+        expectedOutput,
       });
 
       const result = response.data.result || "No result returned.";
       if (result === "Accepted") {
         setCelebrate(true);
         setStatus({ message: "Accepted", type: "success" });
-        setTimeout(() => setCelebrate(false), 3000); // Stop celebration after 3 seconds
+        setTimeout(() => setCelebrate(false), 3000);
       } else {
-        setStatus({ message: "Incorrect", type: "error" });
+        setStatus({ message: "Wrong Answer", type: "error" });
       }
     } catch (err) {
       setStatus({ message: "Error", type: "error" });
@@ -117,47 +131,10 @@ const ProblemSolvingPage = () => {
     }
   };
 
-  const toggleFullScreen = () => {
-    if (!document.fullscreenElement) {
-      // Request full-screen mode for the whole document
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error("Error attempting to enable full-screen mode:", err);
-      });
-    } else {
-      // Exit full-screen mode
-      document.exitFullscreen();
-    }
-  };
-
-  const toggleTimer = (e) => {
-    if (e.detail === 1) {
-      setIsTimerRunning((prev) => !prev);
-    } else if (e.detail === 2) {
-      resetTimer();
-    }
-  };
-
-  const resetTimer = () => {
-    setTimer(0);
-    setIsTimerRunning(false);
-  };
-
-  // Event listener for fullscreen change
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", handleFullScreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullScreenChange);
-    };
-  }, []);
-
   return (
     <div className={`min-h-screen bg-slate-900 text-white flex flex-col ${isFullScreen ? 'overflow-hidden' : ''}`}>
       {celebrate && <Confetti width={window.innerWidth} height={400} />}
-      
-      {/* Status Bar */}
+
       <header className="bg-slate-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-50">
         <div className="flex items-center gap-3">
           {renderStatusIcon()}
@@ -184,77 +161,35 @@ const ProblemSolvingPage = () => {
           >
             Submit
           </button>
-          {/* Timer Icon (Single Click to Start/Stop, Double Click to Reset) */}
-          <div
-            className="cursor-pointer text-xl p-2 flex flex-row"
-            onClick={toggleTimer}
-            onDoubleClick={resetTimer}
-          >
-            <FiClock className={`${isTimerRunning ? 'text-red-600' : 'text-white'}`} />
-            <span className="ml-2">{timer}s</span>
-          </div>
-          {/* Full Screen Button */}
-          <button onClick={toggleFullScreen} className="text-white">
-            {isFullScreen ? <FiMinimize2 /> : <FiMaximize2 />}
-          </button>
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-        {/* Left Panel: Problem */}
         <div className="bg-slate-800 p-6 rounded-md shadow-md overflow-auto h-full">
-          <Tab.Group>
-            <Tab.List className="flex space-x-4 border-b pb-2">
-              <Tab
-                className={({ selected }) =>
-                  selected
-                    ? "text-blue-400 border-b-2 border-blue-400 pb-1 font-semibold"
-                    : "text-slate-400 pb-1"
-                }
-              >
-                Problem
-              </Tab>
-              <Tab
-                className={({ selected }) =>
-                  selected
-                    ? "text-blue-400 border-b-2 border-blue-400 pb-1 font-semibold"
-                    : "text-slate-400 pb-1"
-                }
-              >
-                Tutorial
-              </Tab>
-            </Tab.List>
-            <Tab.Panels>
-              <Tab.Panel className="h-full overflow-auto">
-                <ReactMarkdown
-                  children={problem}
-                  remarkPlugins={[remarkGfm]}
-                  className="prose prose-invert max-w-none mt-4"
-                />
-              </Tab.Panel>
-              <Tab.Panel className="h-full overflow-auto">
-                <h3 className="text-xl font-semibold text-blue-400 mt-4">Tutorial</h3>
-                <p className="mt-4">
-                  This is a tutorial on how to use the platform. Write your code in the editor and use the timer to track your progress.
-                </p>
-              </Tab.Panel>
-            </Tab.Panels>
-          </Tab.Group>
+          <h2 className="text-xl font-bold mb-2">Problem Description</h2>
+          <ReactMarkdown children={problem} remarkPlugins={[remarkGfm]} className="prose prose-invert max-w-none" />
+
+          <h3 className="text-lg font-semibold mt-4">Input</h3>
+          <pre className="bg-slate-700 p-2 rounded-md">{input || "N/A"}</pre>
+
+          <h3 className="text-lg font-semibold mt-4">Expected Output</h3>
+          <pre className="bg-slate-700 p-2 rounded-md">{expectedOutput || "N/A"}</pre>
         </div>
 
-        {/* Right Panel: Editor */}
-        <div className={`bg-slate-800 p-6 rounded-md shadow-md relative h-96 md:h-full col-span-2}`}>
+        <div className="bg-slate-800 p-6 rounded-md shadow-md relative h-96 md:h-full">
           <AceEditor
             mode={language === "cpp" ? "c_cpp" : "python"}
             theme="monokai"
             value={code}
             onChange={handleCodeChange}
-            name="code-editor"
             fontSize={16}
             width="100%"
-            height="100%"
+            height="50%"
           />
+
+          <h3 className="text-lg font-semibold mt-4">Output</h3>
+          <pre className="bg-slate-700 p-2 rounded-md">{output || "No output yet"}</pre>
+
           {isProcessing && (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <BounceLoader color="#36d7b7" />

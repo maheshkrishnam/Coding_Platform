@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
   });
@@ -20,10 +19,19 @@ const Login = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include", // Ensures cookies are sent
       });
-      if (response.ok) navigate("/problems");
+
+      if (response.ok) {
+        const userData = await response.json();
+        localStorage.setItem("user", JSON.stringify(userData)); // Store user data
+        setUser(userData);
+        navigate("/problems");
+      } else {
+        console.error("Login failed");
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Error:", err);
     }
   };
 
@@ -33,19 +41,8 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="bg-slate-800 p-6 rounded-lg shadow-md w-96"
       >
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">
-          Login
-        </h2>
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
         <input
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
-          required
-        />
-        <input
-          type="email"
           name="email"
           placeholder="Email"
           value={formData.email}
@@ -62,10 +59,7 @@ const Login = () => {
           className="w-full p-2 mb-4 rounded bg-slate-700 text-white focus:outline-none"
           required
         />
-        <button
-          type="submit"
-          className="w-full bg-orange-500 hover:bg-orange-600 p-2 rounded text-white font-semibold"
-        >
+        <button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 p-2 rounded text-white font-semibold">
           Login
         </button>
         
