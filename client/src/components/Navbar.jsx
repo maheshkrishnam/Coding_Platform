@@ -43,7 +43,7 @@ const Navbar = () => {
 
   // Conditional rendering of Navbar based on user state
   return (
-    <nav className="bg-slate-950 text-white shadow-sm z-50">
+    <nav className="bg-slate-950 text-white shadow-sm">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center p-4">
         {/* Hamburger Menu for Mobile */}
         <button className="lg:hidden text-white" onClick={toggleMenu}>
@@ -78,7 +78,7 @@ const Navbar = () => {
         {/* User Profile or Login Button */}
         <div className="flex items-center space-x-4">
           {user ? (
-            <div className="relative">
+            <div className="relative z-50">
               <img
                 src={user?.avatar || defaultAvatar}
                 alt="User"

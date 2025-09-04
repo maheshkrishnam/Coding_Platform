@@ -8,7 +8,7 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const BACKEND_API_BASE = "http://localhost:5000";
+const BACKEND_API_BASE = `${import.meta.env.VITE_BACKEND_URL}`;
 
 const ContestPage = () => {
   const { contestId } = useParams();

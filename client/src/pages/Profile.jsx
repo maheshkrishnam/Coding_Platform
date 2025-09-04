@@ -1,40 +1,52 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaUserCircle } from "react-icons/fa";
-import { FiEdit, FiLogOut } from "react-icons/fi";
+import { FiEdit, FiLogOut, FiCheckCircle } from "react-icons/fi";
 import axios from "axios";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { username } = useParams();
   const [user, setUser] = useState(null);
-  const [solvedCount, setSolvedCount] = useState(0); // State for solved problems count
+  const [solvedCount, setSolvedCount] = useState(0);
+  const [solvedProblems, setSolvedProblems] = useState([]);
+  const [problemTitles, setProblemTitles] = useState({});
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchUserProfileAndProblems = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/users/profile/${username}`);
-        setUser(response.data.user);
+        // Fetch user profile
+        const userResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/profile/${username}`);
+        setUser(userResponse.data.user);
 
-        // Get solved problems count from localStorage
-        const solvedProblems = JSON.parse(localStorage.getItem("solvedProblems") || "{}");
-        setSolvedCount(Object.keys(solvedProblems).length);
+        // Fetch all problems to get titles
+        const problemsResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/problem`);
+        const problemData = problemsResponse.data.reduce((acc, problem) => {
+          acc[problem.slug] = problem.title;
+          return acc;
+        }, {});
+        setProblemTitles(problemData);
+
+        // Get solved problems from localStorage
+        const storedSolvedProblems = JSON.parse(localStorage.getItem("solvedProblems") || "{}");
+        setSolvedCount(Object.keys(storedSolvedProblems).length);
+        setSolvedProblems(Object.keys(storedSolvedProblems));
       } catch (error) {
         if (error.response && error.response.status === 404) {
           navigate("/404");
         } else {
-          console.error("Error fetching user profile:", error);
+          console.error("Error fetching data:", error);
           navigate("/");
         }
       }
     };
 
-    fetchUserProfile();
+    fetchUserProfileAndProblems();
   }, [username, navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("solvedProblems"); // Clear solved problems on logout
+    localStorage.removeItem("solvedProblems");
     navigate("/");
   };
 
@@ -124,6 +136,28 @@ const Profile = () => {
             Logout
           </button>
         )}
+
+        {/* Solved Problems List */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold">Solved Problems</h3>
+          {solvedProblems.length > 0 ? (
+            <ul className="mt-2 space-y-2">
+              {solvedProblems.map((slug) => (
+                <li key={slug} className="flex items-center">
+                  <FiCheckCircle className="text-green-500 mr-2" />
+                  <Link
+                    to={`/problem/${slug}`}
+                    className="text-base hover:text-orange-500 transition-colors"
+                  >
+                    {problemTitles[slug] || slug}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-400 mt-2">No problems solved yet.</p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ const UpdateProfile = () => {
     try {
       // Send the PUT request with the updated user data as JSON
       const { data } = await axios.put(
-        "http://localhost:5000/users/update-profile",
+        `${import.meta.env.VITE_BACKEND_URL}/users/update-profile`,
         updatedUserData,
         config
       );

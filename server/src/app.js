@@ -1,13 +1,15 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
 // use :: use is generally used for middlewares
 // for cross origin sharing for all origin belonging to CORS_ORIGIN 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }));
 
@@ -34,6 +36,9 @@ import executionRoute from "./routes/execution.routes.js";
 import contestRoutes from "./routes/contest.routes.js";
 
 // routes declaration
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
 app.use("/users", userRouter);
 app.use('/algorithms', algoRouter);
 app.use("/problem", problemRoutes);

@@ -13,9 +13,9 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const BACKEND_API_BASE = "http://localhost:5000/problem";
-const EXECUTE_API = "http://localhost:5000/execute/run";
-const SUBMIT_API = "http://localhost:5000/execute/submit";
+const BACKEND_API_BASE = `${import.meta.env.VITE_BACKEND_URL}/problem`;
+const EXECUTE_API = `${import.meta.env.VITE_BACKEND_URL}/execute/run`;
+const SUBMIT_API = `${import.meta.env.VITE_BACKEND_URL}/execute/submit`;
 
 const ProblemSolvingPage = () => {
   const { slug } = useParams();
@@ -152,7 +152,7 @@ const ProblemSolvingPage = () => {
     <div className={`min-h-screen bg-slate-900 text-white flex flex-col ${isFullScreen ? 'overflow-hidden' : ''}`}>
       {celebrate && <Confetti width={window.innerWidth} height={400} />}
 
-      <header className="bg-slate-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-50">
+      <header className="bg-slate-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-10">
         <div className="flex items-center gap-3">
           {isSolved && <FiCheckCircle className="text-green-500 text-2xl" />}
           {renderStatusIcon()}

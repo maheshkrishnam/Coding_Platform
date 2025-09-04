@@ -13,7 +13,7 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const BACKEND_API_BASE = "http://localhost:5000/problem";
+const BACKEND_API_BASE = `${import.meta.env.VITE_BACKEND_URL}/problem`;
 
 const problems = [
   "1.Two Sum", 
@@ -115,7 +115,7 @@ const DailyProblemPage = () => {
     setIsProcessing(true);
     setStatus({ message: "Running...", type: "loading" });
     try {
-      const response = await axios.post("http://localhost:5000/execute/run", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/execute/run`, {
         language,
         code,
         input,
@@ -138,7 +138,7 @@ const DailyProblemPage = () => {
     setIsProcessing(true);
     setStatus({ message: "Submitting...", type: "loading" });
     try {
-      const response = await axios.post("http://localhost:5000/execute/submit", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/execute/submit`, {
         language,
         code,
         input,

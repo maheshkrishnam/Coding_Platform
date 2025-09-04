@@ -10,7 +10,7 @@ const Contest = () => {
   useEffect(() => {
     const fetchContests = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/contests");
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/contests`);
         setOngoingContests(response.data.ongoing || []);
         setPastContests(response.data.past || []);
       } catch (error) {

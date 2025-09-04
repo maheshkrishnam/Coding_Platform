@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";
 import Loader from "../components/Loader";
 
-const API_BASE_URL = "http://localhost:5000/problem";
+const API_BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/problem`;
 
 const ProblemList = () => {
   const [problems, setProblems] = useState([]);

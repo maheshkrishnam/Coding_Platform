@@ -73,7 +73,7 @@ const TryNow = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/execute/run', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/execute/run`, {
         language,
         code
       });
