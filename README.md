@@ -180,39 +180,39 @@ The platform offers a seamless, LeetCode-inspired workflow for coding practice, 
 - **Sign Up/Login**: Create an account with your email and password or sign in to access personalized features like progress tracking and submission history.
 - **Guest Access**: Click **"Continue without login"** to instantly explore problems and use the playground without an account (note: progress tracking requires login).
 
-![Login Page](assests\images\login.png)
+![Login Page](assets/images/login.png)
 
 ### 2. Browse Problems
 - Visit the **Problems** section to browse coding challenges, filterable by difficulty (easy, medium, hard) or category (e.g., arrays, graphs).
 - Click a problem to view its description, constraints, and sample test cases.
 
-![Login Page](assests\images\problem.png)
+![Login Page](assets/images/problem.png)
 
 ### 3. Solve Problems
 - Write your solution in the Monaco/Ace editor, supporting multiple languages (e.g., JavaScript, Python, C++, Java) with syntax highlighting and auto-completion.
 - Click **Run** to test against sample test cases or custom inputs for instant feedback.
 - Click **Submit** to evaluate against all test cases (including hidden ones) via Judge0, with detailed pass/fail results.
 
-![Login Page](assests\images\solve.png)
+![Login Page](assets/images/solve.png)
 
 ### 4. Learn Algorithms
 - Explore the **Algorithms** section for categorized learning paths (e.g., arrays, linked lists, dynamic programming).
 - Select an algorithm to view explanations, sample code, and related problems.
 - Click **Try** to load sample code in the editor and experiment with it.
 
-![Login Page](assests\images\algorithm.png)
-![Login Page](assests\images\learn.png)
+![Login Page](assets/images/algorithm.png)
+![Login Page](assets/images/learn.png)
 
 ### 5. Use the Playground
 - Go to the **Playground** page to write and test custom code snippets with user-defined inputs, separate from problem submissions.
 - Code is saved in browser local storage for session persistence and iterative coding.
 - Run code securely via Judge0 in your chosen language.
 
-![Login Page](assests\images\run_algo.png)
-![Login Page](assests\images\try.png)
+![Login Page](assets/images/run_algo.png)
+![Login Page](assets/images/try.png)
 
 ### 6. Track Your Progress
 - Click the **Profile** section in the top-right corner (available for logged-in users) to access your personalized dashboard.
 - View solved problems, submission history, success rates, performance metrics (e.g., runtime, memory), streaks, and category-wise completion rates.
 
-![Login Page](assests\images\profile.png)
+![Login Page](assets/images/profile.png)
