@@ -43,7 +43,7 @@ const Navbar = () => {
 
   // Conditional rendering of Navbar based on user state
   return (
-    <nav className="bg-slate-950 text-white shadow-sm">
+    <nav className="bg-slate-950 text-white shadow-sm z-50">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center p-4">
         {/* Hamburger Menu for Mobile */}
         <button className="lg:hidden text-white" onClick={toggleMenu}>
@@ -59,7 +59,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation Links */}
         <ul className="hidden lg:flex space-x-6">
-          {["problems", "contest", "algorithms", "courses"].map((item) => (
+          {["problems", "contest", "algorithms", "courses", "try-now"].map((item) => (
             <li key={item}>
               <NavLink
                 to={`/${item}`}
@@ -137,7 +137,7 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="lg:hidden bg-slate-1000 p-4">
           <ul className="space-y-4 text-center">
-            {["problems", "contest", "algorithms", "courses"].map((item) => (
+            {["problems", "contest", "algorithms", "courses", "try-now"].map((item) => (
               <li key={item}>
                 <NavLink
                   to={`/${item}`}

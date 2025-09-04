@@ -20,8 +20,8 @@ const SUBMIT_API = "http://localhost:5000/execute/submit";
 const ProblemSolvingPage = () => {
   const { slug } = useParams();
   const [problem, setProblem] = useState("");
-  const [input, setInput] = useState("");  // Fetched sample input
-  const [expectedOutput, setExpectedOutput] = useState("");  // Fetched expected output
+  const [input, setInput] = useState("");
+  const [expectedOutput, setExpectedOutput] = useState("");
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [status, setStatus] = useState({ message: "Idle", type: "idle" });
@@ -30,7 +30,8 @@ const ProblemSolvingPage = () => {
   const [timer, setTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [output, setOutput] = useState("");  // Store code execution output
+  const [output, setOutput] = useState("");
+  const [isSolved, setIsSolved] = useState(false); // Track if problem is solved
 
   useEffect(() => {
     const fetchProblemDetails = async () => {
@@ -40,6 +41,15 @@ const ProblemSolvingPage = () => {
         setProblem(problem);
         setInput(input);
         setExpectedOutput(output);
+
+        // Check if the problem was previously solved and load the solution
+        const solvedProblems = JSON.parse(localStorage.getItem("solvedProblems") || "{}");
+        if (solvedProblems[slug]) {
+          setIsSolved(true);
+          setCode(solvedProblems[slug].code);
+          setLanguage(solvedProblems[slug].language);
+          setStatus({ message: "Previously Solved", type: "success" });
+        }
       } catch (error) {
         console.error("Error fetching problem details:", error);
       }
@@ -107,6 +117,13 @@ const ProblemSolvingPage = () => {
       if (result === "Accepted") {
         setCelebrate(true);
         setStatus({ message: "Accepted", type: "success" });
+        setIsSolved(true);
+
+        // Store the solution in localStorage
+        const solvedProblems = JSON.parse(localStorage.getItem("solvedProblems") || "{}");
+        solvedProblems[slug] = { code, language, timestamp: Date.now() };
+        localStorage.setItem("solvedProblems", JSON.stringify(solvedProblems));
+
         setTimeout(() => setCelebrate(false), 3000);
       } else {
         setStatus({ message: "Wrong Answer", type: "error" });
@@ -137,6 +154,7 @@ const ProblemSolvingPage = () => {
 
       <header className="bg-slate-800 p-4 flex items-center justify-between sticky shadow-md top-0 z-50">
         <div className="flex items-center gap-3">
+          {isSolved && <FiCheckCircle className="text-green-500 text-2xl" />}
           {renderStatusIcon()}
           <span className="text-xl font-semibold">{status.message}</span>
         </div>

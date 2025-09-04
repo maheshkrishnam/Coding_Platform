@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FiCheckCircle } from "react-icons/fi";
 import Loader from "../components/Loader";
 
-const API_BASE_URL = "http://localhost:5000/problem"; // URL to your backend API
+const API_BASE_URL = "http://localhost:5000/problem";
 
 const ProblemList = () => {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [solvedProblems, setSolvedProblems] = useState({});
 
   const fetchProblems = async () => {
     try {
-      const response = await fetch(API_BASE_URL);  // Call your backend API instead of GitHub
+      const response = await fetch(API_BASE_URL);
       const data = await response.json();
 
       const problemData = data.map((problem) => ({
@@ -26,6 +28,10 @@ const ProblemList = () => {
 
       setProblems(problemData);
       setLoading(false);
+
+      // Load solved problems from localStorage
+      const storedSolvedProblems = JSON.parse(localStorage.getItem("solvedProblems") || "{}");
+      setSolvedProblems(storedSolvedProblems);
     } catch (error) {
       console.error("Error fetching problems:", error);
       setLoading(false);
@@ -50,9 +56,13 @@ const ProblemList = () => {
             className="problem-card px-6 py-4 rounded-lg bg-slate-700 font-medium hover:bg-slate-600 transition-all"
           >
             <Link
-              to={`/problem/${problem.slug}`} target="_blank"
-              className="block text-base font-normal hover:text-orange-500 transition-colors"
+              to={`/problem/${problem.slug}`}
+              target="_blank"
+              className="text-base font-normal hover:text-orange-500 transition-colors flex items-center"
             >
+              {solvedProblems[problem.slug] && (
+                <FiCheckCircle className="text-green-500 mr-2" />
+              )}
               {problem.title}
             </Link>
           </div>
