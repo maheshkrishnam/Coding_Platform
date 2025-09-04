@@ -53,7 +53,7 @@ const Navbar = () => {
         {/* Logo Section */}
         <div className="text-2xl font-semibold">
           <NavLink to="/problems" className="text-white hover:text-orange-500">
-            CPPlatform
+            CP
           </NavLink>
         </div>
 
